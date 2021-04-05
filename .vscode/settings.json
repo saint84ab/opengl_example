@@ -1,5 +1,9 @@
 {
     "cmake.debugConfig": {
         "cwd": "${workspaceFolder}"
+    },
+    "files.associations": {
+        "*.rmd": "markdown",
+        "xstring": "cpp"
     }
 }
