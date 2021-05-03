@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME}
 
 include(Dependency.cmake)
 
-#ìš°ë¦¬ í”„ë¡œì íŠ¸ì— include / lib ê´€ë ¨ ì˜µì…˜ ì¶”ê°€
+#¿ì¸® ÇÁ·ÎÁ§Æ®¿¡ include / lib °ü·Ã ¿É¼Ç Ãß°¡
 target_include_directories(${PROJECT_NAME} PUBLIC ${DEP_INCLUDE_DIR})
 target_link_directories(${PROJECT_NAME} PUBLIC ${DEP_LIB_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${DEP_LIBS})
@@ -35,5 +35,5 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     WINDOW_HEIGHT=${WINDOW_HEIGHT}
     )
 
-# Dependencyë“¤ì´ ë¨¼ì € build ë  ìˆ˜ ìˆê²Œ ê´€ê³„ ì„¤ì •
+# DependencyµéÀÌ ¸ÕÀú build µÉ ¼ö ÀÖ°Ô °ü°è ¼³Á¤
 add_dependencies(${PROJECT_NAME} ${DEP_LIST})
