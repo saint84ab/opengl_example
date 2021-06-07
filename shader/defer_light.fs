@@ -27,6 +27,7 @@ void main() {
         texture(ssao, texCoord).r * 0.4 * albedo :
         albedo * 0.4; // hard-coded ambient component
     vec3 lighting = ambient; 
+    
     vec3 viewDir = normalize(viewPos - fragPos);
     for(int i = 0; i < NR_LIGHTS; ++i) {
         // diffuse

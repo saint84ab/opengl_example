@@ -297,14 +297,6 @@ void Context::Render() {
     ImGui::End();
 
     if (ImGui::Begin("SSAO")) {
-        float width = ImGui::GetContentRegionAvailWidth();
-        float height = width * ((float)m_height / (float)m_width);
-        ImGui::Image((ImTextureID)m_ssaoFramebuffer->GetColorAttachment()->Get(),
-            ImVec2(width, height), ImVec2(0, 1), ImVec2(1, 0));
-    }
-    ImGui::End();
-
-    if (ImGui::Begin("SSAO")) {
         const char* bufferNames[] = { "original", "blurred" };
         static int bufferSelect = 0;
         ImGui::Combo("buffer", &bufferSelect, bufferNames, 2);
@@ -366,16 +358,12 @@ void Context::Render() {
     m_deferGeoFramebuffer->GetColorAttachment(0)->Bind();
     glActiveTexture(GL_TEXTURE1);
     m_deferGeoFramebuffer->GetColorAttachment(1)->Bind();
-    glActiveTexture(GL_TEXTURE3);
-    m_ssaoBlurFramebuffer->GetColorAttachment()->Bind();
     glActiveTexture(GL_TEXTURE2);
     m_ssaoNoiseTexture->Bind();
     glActiveTexture(GL_TEXTURE0);
     m_ssaoProgram->SetUniform("gPosition", 0);
     m_ssaoProgram->SetUniform("gNormal", 1);	
     m_ssaoProgram->SetUniform("texNoise", 2);
-    m_deferLightProgram->SetUniform("ssao", 3);
-    m_deferLightProgram->SetUniform("useSsao", m_useSsao ? 1 : 0);
     m_ssaoProgram->SetUniform("noiseScale", glm::vec2(
         (float)m_width / (float)m_ssaoNoiseTexture->GetWidth(),
         (float)m_height / (float)m_ssaoNoiseTexture->GetHeight()));	
@@ -404,10 +392,7 @@ void Context::Render() {
     glViewport(0, 0, m_width, m_height);
     glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-	
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
- 
+    glEnable(GL_DEPTH_TEST); 
     m_deferLightProgram->Use();
     glActiveTexture(GL_TEXTURE0);
     m_deferGeoFramebuffer->GetColorAttachment(0)->Bind();
@@ -415,10 +400,14 @@ void Context::Render() {
     m_deferGeoFramebuffer->GetColorAttachment(1)->Bind();
     glActiveTexture(GL_TEXTURE2);
     m_deferGeoFramebuffer->GetColorAttachment(2)->Bind();
+    glActiveTexture(GL_TEXTURE3);
+    m_ssaoBlurFramebuffer->GetColorAttachment()->Bind();
     glActiveTexture(GL_TEXTURE0);
     m_deferLightProgram->SetUniform("gPosition", 0);
     m_deferLightProgram->SetUniform("gNormal", 1);
-    m_deferLightProgram->SetUniform("gAlbedoSpec", 2);
+    m_deferLightProgram->SetUniform("gAlbedoSpec", 2);	
+    m_deferLightProgram->SetUniform("ssao", 3);
+    m_deferLightProgram->SetUniform("useSsao", m_useSsao ? 1 : 0);
     for (size_t i = 0; i < m_deferLights.size(); i++) {
         auto posName = fmt::format("lights[{}].position", i);
         auto colorName = fmt::format("lights[{}].color", i);
